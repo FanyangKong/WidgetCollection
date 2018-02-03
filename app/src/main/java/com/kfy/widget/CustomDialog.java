@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
  */
 
 public class CustomDialog extends Dialog {
+    private static final String TAG = CustomDialog.class.getSimpleName();
     private Context context;
     private int height, width;
     private boolean cancelTouchout;
@@ -51,6 +54,9 @@ public class CustomDialog extends Dialog {
         win.setAttributes(lp);
     }
 
+    public void addViewOnClick(int viewId, View.OnClickListener listener) {
+        this.view.findViewById(viewId).setOnClickListener(listener);
+    }
     public static final class Builder {
         private Context context;
         private int height, width;
@@ -62,8 +68,10 @@ public class CustomDialog extends Dialog {
             this.context = context;
         }
 
-        public Builder view(View view) {
-            this.view = view;
+        public Builder view(int viewResId) {
+            this.view = LayoutInflater.from(context).inflate(viewResId, null);
+            Log.d(TAG, "width : " + view.getWidth() +
+                    "height : " + view.getHeight());
             return this;
         }
 
@@ -107,6 +115,13 @@ public class CustomDialog extends Dialog {
             return this;
         }
 
+        /**
+         * todo 在Builder模式中添加点击事件时，如果操作此时正在构建的CustomDialog会编译器会检查到可能未初始化，
+         * 所以如果要在点击事件中操作该CustomDialog则不能通过该方法添加点击事件
+         * @param viewId
+         * @param listener
+         * @return
+         */
         public Builder addViewOnClick(int viewId, View.OnClickListener listener) {
             this.view.findViewById(viewId).setOnClickListener(listener);
             return this;
@@ -122,7 +137,7 @@ public class CustomDialog extends Dialog {
     }
 
 
-    public static int dp2px(Context context, int dpValue) {
+    private static int dp2px(Context context, int dpValue) {
         return (int) (context.getResources().getDisplayMetrics().density * dpValue + 0.5);
     }
 
