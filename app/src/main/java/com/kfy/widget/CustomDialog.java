@@ -22,12 +22,12 @@ public class CustomDialog extends Dialog {
     private boolean cancelTouchout;
     private View view;
 
-    public CustomDialog(@NonNull Builder builder) {
+    private CustomDialog(@NonNull Builder builder) {
         super(builder.context);
         init(builder);
     }
 
-    public CustomDialog(@NonNull Builder builder, int themeResId) {
+    private CustomDialog(@NonNull Builder builder, int themeResId) {
         super(builder.context, themeResId);
         init(builder);
     }
